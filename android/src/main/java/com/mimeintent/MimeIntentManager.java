@@ -33,6 +33,29 @@ public class MimeIntentManager extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void openURLWithMime(String url, String mime, Promise promise) {
+        if("application/vnd.android.package-archive".equals(mime)){
+            try{
+                Activity currentActivity = getCurrentActivity();
+                Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                if (currentActivity != null) {
+                    Uri uri = FileProvider.getUriForFile(currentActivity, getReactApplicationContext().getPackageName() + ".provider",new File(url));
+                    intent.setData( uri );
+                    currentActivity.startActivity(intent);
+                 } else {
+                    Uri uri = FileProvider.getUriForFile(getCurrentActivity(), getReactApplicationContext().getPackageName() + ".provider", new File(url));
+                    intent.setData( uri );
+                    getReactApplicationContext().startActivity(intent);
+                }
+                return;
+            }
+            catch(Exception e){
+                promise.reject(new JSApplicationIllegalArgumentException(
+                    "Could not open URL '" + url + "': " + e.getMessage()));
+            }
+        }
+
         if (url == null || url.isEmpty()) {
             promise.reject(new JSApplicationIllegalArgumentException("Invalid URL: " + url));
             return;
