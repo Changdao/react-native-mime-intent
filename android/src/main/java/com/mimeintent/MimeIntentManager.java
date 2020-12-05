@@ -11,6 +11,9 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
+import java.io.File;
+import androidx.core.content.FileProvider;
+
 public class MimeIntentManager extends ReactContextBaseJavaModule {
     public MimeIntentManager(ReactApplicationContext reactContext) {
         super(reactContext);
